@@ -92,42 +92,56 @@ html, body {
   z-index: 1000;
   display: grid;
   grid-template-columns: 80px repeat(12, 1fr) 80px;
-  grid-template-rows: 1fr auto 1fr auto 1fr;
+  grid-template-rows: 80px 1fr auto 1fr 80px;
   font-family: 'Space Grotesk', sans-serif;
 }
 
 .overlay-header {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  right: 0;
+  grid-column: 1 / -1;
+  grid-row: 1;
   margin: 0 auto;
   font-size: 16px;
   color: #666;
   text-transform: uppercase;
   font-family: 'Space Mono', Arial, sans-serif;
-  /* letter-spacing: 0.05em; */
   opacity: 1 !important;
   transition: none !important;
   text-align: center;
   pointer-events: none;
+  position: static;
+}
+
+.overlay-step-indicator {
+  grid-column: 1 / 2;
+  grid-row: 3;
+  align-self: center;
+  justify-self: center;
+  color: #fff;
+  font-size: 24px;
+  font-family: 'Space Mono', Arial, sans-serif;
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  pointer-events: none;
+  user-select: none;
 }
 
 .overlay-year {
-  grid-column: 2 / span 2;
+  grid-column: 2 / 4;
   grid-row: 3;
   align-self: center;
+  justify-self: start;
   font-size: 160px;
   font-weight: 300;
   color: #fff;
-  /* font-weight: 300; */
   line-height: 1;
   opacity: 0;
   transition: opacity 0.5s;
 }
 
 .overlay-stat {
-  grid-column: 11 / -1;
+  grid-column: 10 / 14;
   grid-row: 3;
   align-self: center;
   justify-self: start;
@@ -158,10 +172,8 @@ font-family: 'Space Mono', Arial, sans-serif;
 }
 
 .overlay-footer {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  right: 0;
+  grid-column: 1 / -1;
+  grid-row: 5;
   margin: 0 auto;
   font-size: 16px;
   color: #666;
@@ -171,4 +183,5 @@ font-family: 'Space Mono', Arial, sans-serif;
   transition: none !important;
   text-align: center;
   pointer-events: none;
+  position: static;
 }

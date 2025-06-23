@@ -184,7 +184,8 @@ this._gotoTimelineState = (dir) => {
     const intro = document.getElementById('intro-overlay');
     if (intro) {
       intro.classList.add('fade-out');
-      setTimeout(() => { intro.style.display = 'none'; }, 900);
+      intro.style.opacity = 0;
+      setTimeout(() => { intro.style.display = 'none'; }, 900); // match CSS transition duration
     }
     this._introFaded = true;
     // Find the first mesh state (should be at index 1)
@@ -267,6 +268,32 @@ this._gotoTimelineState = (dir) => {
     if (this._swipeLocked) return; // Ignore navigation during morphs/animations
     const prevState = this.timelineStates[this._activeMorphIdx];
     this._activeMorphIdx = idx;
+    // Restore intro overlay if returning to first cloud state
+    if (idx === 0) {
+      // 1. Fade out chapter 1 overlay (timeline overlay)
+      if (window.updateTimelineOverlay) {
+        window.updateTimelineOverlay({ year: '', event: '', species: '', contaminationRate: 0, description: '', show: false });
+      }
+      // 2. Morph mesh to cloud if coming from mesh
+      if (prevState && prevState.type === 'mesh') {
+        await this._morphMeshToCloud();
+      }
+      // 3. Fade in intro overlay
+      const intro = document.getElementById('intro-overlay');
+      if (intro) {
+        intro.style.display = '';
+        // Force reflow to restart animation
+        void intro.offsetWidth;
+        intro.classList.remove('fade-out');
+        intro.style.opacity = 1;
+      }
+      // 4. Reset intro state
+      this._introFaded = false;
+      this._swipeAccum = 0;
+      // 5. Unlock swipe after transition
+      setTimeout(() => { this._swipeLocked = false; }, 500);
+      return;
+    }
     // Cancel any running contamination highlight and increment version
     this._contamHighlightVersion = (this._contamHighlightVersion || 0) + 1;
     this._cancelContaminationHighlight?.();
@@ -301,14 +328,18 @@ this._gotoTimelineState = (dir) => {
       await this._morphCloudToMesh(state.mesh, meshMorphDuration); // duration x2
       if (window.updateTimelineOverlay) {
         const entry = state.entry;
-        console.log('[DEBUG] Calling updateTimelineOverlay for mesh:', entry);
+        // Calculate step index (mesh states only)
+        const meshStates = this.timelineStates.filter(s => s.type === 'mesh');
+        const meshIdx = meshStates.findIndex(s => s.entry === entry);
         window.updateTimelineOverlay({
           year: entry.year,
           event: entry.event,
           species: entry.Species,
           contaminationRate: entry.contaminationRate,
           description: entry.description,
-          show: true
+          show: true,
+          step: meshIdx + 1,
+          totalSteps: meshStates.length
         });
       }
       const contaminationRate = state.entry?.contaminationRate || 0;

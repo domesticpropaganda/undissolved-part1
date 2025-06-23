@@ -6,7 +6,7 @@ window.scrollTo(0, 0);
 import { Scene } from './scene.js';
 import './styles/main.css';
  // Overlay update logic
-    window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show }) {
+    window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps }) {
       const header = document.querySelector('.overlay-header');
       const yearEl = document.querySelector('.overlay-year');
       const stat = document.querySelector('.overlay-stat');
@@ -14,7 +14,8 @@ import './styles/main.css';
       const statSublabel = document.querySelector('.overlay-stat-sublabel');
       const speciesEl = document.querySelector('.overlay-species');
       const footer = document.querySelector('.overlay-footer');
-      if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl) return;
+      const stepIndicator = document.querySelector('.overlay-step-indicator');
+      if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepIndicator) return;
       // Header/footer always visible
       header.textContent = 'UNDISSOLVED - SNAPSHOTS OF A SYNTHETIC AGE';
       footer.textContent = '©2025 STUDIØE';
@@ -25,12 +26,20 @@ import './styles/main.css';
         statMain.style.opacity = 0;
         statSublabel.style.opacity = 0;
         speciesEl.style.opacity = 0;
+        stepIndicator.style.opacity = 0;
         return;
       }
       // Set content
       yearEl.textContent = year;
       statMain.textContent = Math.round(contaminationRate * 100) + '%';
       speciesEl.textContent = species || '';
+      // Step indicator
+      if (typeof step === 'number' && typeof totalSteps === 'number') {
+        stepIndicator.textContent = `${step} / ${totalSteps}`;
+        stepIndicator.style.opacity = 1;
+      } else {
+        stepIndicator.style.opacity = 0;
+      }
       // Highlight first part of description in pink
       let desc = description || '';
       let match = desc.match(/^(of [^,\s]+|of [^\s]+)/i);
