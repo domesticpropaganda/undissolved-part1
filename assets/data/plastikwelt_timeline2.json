@@ -1,0 +1,79 @@
+[
+  {
+    "year": 1972,
+    "event": "First synthetic fibers observed in jellyfish tentacles (Sargasso Sea)",
+    "Species": "marine plankton",
+    "Contam. Rate (%)": 2,
+    "contaminationRate": 0.02,
+    "description": "of sampled jellyfish contained small plastic fragments entangled in their gelatinous tissues.",
+    "plastic_types": "PE, PS, fragments",
+    "mesh": "jellyfish.glb",
+    "source": "Textile fibers from early synthetic clothing, offshore waste dumping"
+  },
+  {
+    "year": 1990,
+    "event": "First microplastics documented in fish gut contents",
+    "Species": "fish",
+    "Contam. Rate (%)": 12,
+    "contaminationRate": 0.12,
+    "description": "of studied fish were found with synthetic fragments in their stomachs or intestines.",
+    "plastic_types": "PE, PP, PS",
+    "mesh": "fish.glb",
+    "source": "Fishing gear, packaging waste, industrial pellets"
+  },
+  {
+    "year": 2000,
+    "event": "Sea turtles found with plastic bags and debris in stomachs and airways",
+    "Species": "bird",
+    "Contam. Rate (%)": 28,
+    "contaminationRate": 0.28,
+    "description": "of examined sea turtles showed signs of plastic ingestion or obstruction in their digestive or respiratory systems.",
+    "plastic_types": "PE, PP, PS, PET, PA, PES",
+    "mesh": "turtle.glb",
+    "source": "Plastic bags, marine debris, ghost nets"
+  },
+  {
+    "year": 2010,
+    "event": "Microplastics found in human stool (pilot study)",
+    "Species": "human (stool)",
+    "Contam. Rate (%)": 40,
+    "contaminationRate": 0.4,
+    "description": "of human stool samples tested contained multiple types of microplastic residues.",
+    "plastic_types": "PP, PET, PE, PS, PA, PES, HDPE, LDPE, EVA",
+    "mesh": "human.glb",
+    "source": "Contaminated food and water supply, air exposure"
+  },
+  {
+    "year": 2020,
+    "event": "Nearly 9 in 10 seabirds carry microplastics",
+    "Species": "bird",
+    "Contam. Rate (%)": 65,
+    "contaminationRate": 0.65,
+    "description": "of seabird species studied had plastic particles lodged in their digestive systems.",
+    "plastic_types": "PE, PP, PS, PET",
+    "mesh": "bird.glb",
+    "source": "Ocean plastic accumulation, contaminated fish diets"
+  },
+  {
+    "year": 2023,
+    "event": "Microplastics found in human placentas",
+    "Species": "human (placenta)",
+    "Contam. Rate (%)": 82,
+    "contaminationRate": 0.82,
+    "description": "of human placental samples analyzed showed traces of polymer-based contaminants.",
+    "plastic_types": "PP, PET, PE, PA",
+    "mesh": "placenta.glb",
+    "source": "Microplastics in maternal bloodstreams, indoor dust"
+  },
+  {
+    "year": 2030,
+    "event": "Forecast: global contamination at critical level",
+    "Species": "all",
+    "Contam. Rate (%)": 90,
+    "contaminationRate": 0.9,
+    "description": "of all global species are forecasted to carry measurable amounts of plastic particles.",
+    "plastic_types": "PE, PP, PET, PS, PVC, PA, PES",
+    "mesh": "earth.glb",
+    "source": "Widespread industrial pollution, atmospheric deposition"
+  }
+]
