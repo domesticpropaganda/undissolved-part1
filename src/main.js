@@ -14,11 +14,11 @@ import './styles/main.css';
       const statSublabel = document.querySelector('.overlay-stat-sublabel');
       const speciesEl = document.querySelector('.overlay-species');
       const footer = document.querySelector('.overlay-footer');
-      const stepIndicator = document.querySelector('.overlay-step-indicator');
-      if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepIndicator) return;
+      const stepBars = document.querySelector('.overlay-step-bars');
+      if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepBars) return;
       // Header/footer always visible
       header.textContent = 'UNDISSOLVED - SNAPSHOTS OF A SYNTHETIC AGE';
-      footer.textContent = '©2025 STUDIØE';
+      footer.textContent = '\u00a92025 STUDI\u00d8E';
       // Show/hide stat+year block
       if (!show) {
         yearEl.style.opacity = 0;
@@ -26,19 +26,22 @@ import './styles/main.css';
         statMain.style.opacity = 0;
         statSublabel.style.opacity = 0;
         speciesEl.style.opacity = 0;
-        stepIndicator.style.opacity = 0;
+        stepBars.innerHTML = '';
         return;
       }
       // Set content
       yearEl.textContent = year;
       statMain.textContent = Math.round(contaminationRate * 100) + '%';
       speciesEl.textContent = species || '';
-      // Step indicator
+      // Step bars
       if (typeof step === 'number' && typeof totalSteps === 'number') {
-        stepIndicator.textContent = `${step} / ${totalSteps}`;
-        stepIndicator.style.opacity = 1;
+        let bars = '';
+        for (let i = 1; i <= totalSteps; i++) {
+          bars += `<div class="step-bar${i === step ? ' active' : ''}"></div>`;
+        }
+        stepBars.innerHTML = bars;
       } else {
-        stepIndicator.style.opacity = 0;
+        stepBars.innerHTML = '';
       }
       // Highlight first part of description in pink
       let desc = description || '';
