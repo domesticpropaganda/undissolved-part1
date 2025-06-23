@@ -174,31 +174,33 @@ export class Scene {
     this._lastTimelineStateIdx = 0;
     this._introFaded = false;
     // Helper: go to timeline state by offset (+1/-1)
-    this._gotoTimelineState = (dir) => {
-      if (this._swipeLocked) return;
-      if (!this.timelineStates || !this.timelineStates.length) return; // Guard: timelineStates must exist
-      // Fade out intro overlay on first interaction and morph to first mesh
-      if (!this._introFaded) {
-        const intro = document.getElementById('intro-overlay');
-        if (intro) {
-          intro.classList.add('fade-out');
-          setTimeout(() => { intro.style.display = 'none'; }, 900);
-        }
-        this._introFaded = true;
-        // Find the first mesh state (should be at index 1)
-        const firstMeshIdx = this.timelineStates.findIndex(s => s.type === 'mesh');
-        if (firstMeshIdx !== -1) {
-          this.morphToTimelineState(firstMeshIdx, dir);
-        }
-        return;
-      }
-      let idx = this._activeMorphIdx + dir;
-      idx = Math.max(0, Math.min(this.timelineStates.length - 1, idx));
-      if (idx !== this._activeMorphIdx) {
-        this._lastTimelineStateIdx = this._activeMorphIdx; // Track previous for direction
-        this.morphToTimelineState(idx, dir);
-      }
-    };
+    // Helper: go to timeline state by offset (+1/-1)
+this._gotoTimelineState = (dir) => {
+  if (this._swipeLocked) return;
+  if (!this.timelineStates || !this.timelineStates.length) return; // Guard: timelineStates must exist
+  // Prevent scrolling up on intro overlay
+  if (!this._introFaded) {
+    if (dir < 0) return; // Ignore scroll up on intro
+    const intro = document.getElementById('intro-overlay');
+    if (intro) {
+      intro.classList.add('fade-out');
+      setTimeout(() => { intro.style.display = 'none'; }, 900);
+    }
+    this._introFaded = true;
+    // Find the first mesh state (should be at index 1)
+    const firstMeshIdx = this.timelineStates.findIndex(s => s.type === 'mesh');
+    if (firstMeshIdx !== -1) {
+      this.morphToTimelineState(firstMeshIdx, dir);
+    }
+    return;
+  }
+  let idx = this._activeMorphIdx + dir;
+  idx = Math.max(0, Math.min(this.timelineStates.length - 1, idx));
+  if (idx !== this._activeMorphIdx) {
+    this._lastTimelineStateIdx = this._activeMorphIdx; // Track previous for direction
+    this.morphToTimelineState(idx, dir);
+  }
+};
     // Wheel event (trackpad/touchpad/mouse)
     window.addEventListener('wheel', (e) => {
       if (this._swipeLocked) return;
