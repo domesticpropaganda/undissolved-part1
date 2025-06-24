@@ -54,7 +54,7 @@ html, body {
   color: #FF0138;
   font-size: 160px;
   font-family: 'Space Grotesk', Arial, sans-serif;
-  letter-spacing: 0.12em;
+  /* letter-spacing: 0.12em; */
   margin: 0 0 1.2rem 0;
   font-weight: 300;
   text-shadow: 0 2px 16px #000, 0 0 2px #FF0138;
