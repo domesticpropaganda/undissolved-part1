@@ -151,32 +151,41 @@ html, body {
 }
 
 .overlay-stat {
-  grid-column: 10 / 14;
+  grid-column: 11 / 14;
   grid-row: 3;
   align-self: center;
   justify-self: start;
   text-align: left;
   opacity: 0;
   transition: opacity 0.5s;
+  position: relative;
 }
 
 .overlay-stat-main {
+  /* font-family: 'Space Mono', Arial, sans-serif; */
   font-size: 160px;
-  font-weight: 300;
+  font-weight: 400;
+  margin-left: -0.04em;
+  letter-spacing: normal;
   color: #FF0138;
-  line-height: 1;
+  line-height: 0.75;
   text-align: left;
   display: block;
 }
 
 .overlay-stat-sublabel {
-  font-size: 16px;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 8px; /* adjust as needed */
+  width: 100%;
 font-family: 'Space Mono', Arial, sans-serif;
+  font-size: 13px;
   text-transform: uppercase;
-  color: #fff;
-  margin-top: 16px;
+  color: #ffffffbe;
+  /* margin-top: 16px; */
   font-weight: 400;
-  max-width: 20vw;
+  /* max-width: 20vw; */
   display: block;
   text-align: left;
 }

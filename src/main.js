@@ -17,7 +17,7 @@ import './styles/main.css';
       const stepBars = document.querySelector('.overlay-step-bars');
       if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepBars) return;
       // Header/footer always visible
-      header.textContent = 'UNDISSOLVED - SNAPSHOTS OF A SYNTHETIC AGE';
+      header.textContent = 'UNDISSOLVED';
       footer.textContent = '\u00a92025 STUDI\u00d8E';
       // Show/hide stat+year block
       if (!show) {
@@ -103,7 +103,7 @@ import './styles/main.css';
                 statSublabel.innerHTML = sublabelHTML + sublabelText.slice(0, i);
                 if (i <= sublabelText.length) {
                   i++;
-                  setTimeout(typeWriter, 18); // speed in ms per letter
+                  setTimeout(typeWriter, 9); // speed in ms per letter
                 } else {
                   // Fade in species after typewriter completes
                   speciesEl.style.transition = 'opacity 0.5s';

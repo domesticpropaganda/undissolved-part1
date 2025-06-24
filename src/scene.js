@@ -50,6 +50,22 @@ export class Scene {
       this.preloader.remove();
       if (this.onAssetsLoaded) this.onAssetsLoaded();
     });
+
+    // --- Outro overlay setup ---
+    const outro = document.getElementById('outro-overlay');
+    if (outro) {
+      outro.style.display = 'none';
+      outro.style.opacity = 0;
+      outro.classList.remove('fade-out');
+      const outroBtn = document.getElementById('outro-close-btn');
+      if (outroBtn) {
+        outroBtn.onclick = () => {
+          outro.style.opacity = 0;
+          outro.classList.add('fade-out');
+          setTimeout(() => { outro.style.display = 'none'; }, 800);
+        };
+      }
+    }
   }
 
   async preloadAllAssets() {
@@ -234,7 +250,7 @@ this._gotoTimelineState = (dir) => {
   showInitialCloud() {
     this.createRandomCloud();
     console.log('[Scene] Initial random cloud generated and displayed.');
-    // Start at cloud state, do NOT morph to mesh or show overlay until user interacts
+    // Start at cloud state, do NOT morph to mesh or show overlay/stat until user interacts
     this._activeMorphIdx = 0;
     this._lastTimelineStateIdx = 0;
     // No call to morphToTimelineState here!
@@ -268,6 +284,15 @@ this._gotoTimelineState = (dir) => {
     if (this._swipeLocked) return; // Ignore navigation during morphs/animations
     const prevState = this.timelineStates[this._activeMorphIdx];
     this._activeMorphIdx = idx;
+
+    // --- Outro overlay: always fade out unless we're landing on the final cloud ---
+    const outro = document.getElementById('outro-overlay');
+    if (outro && idx !== this.timelineStates.length - 1) {
+      outro.style.opacity = 0;
+      outro.classList.add('fade-out');
+      setTimeout(() => { outro.style.display = 'none'; }, 800);
+    }
+
     // Restore intro overlay if returning to first cloud state
     if (idx === 0) {
       // 1. Fade out chapter 1 overlay (timeline overlay)
@@ -307,25 +332,38 @@ this._gotoTimelineState = (dir) => {
         window.updateTimelineOverlay({ year: '', event: '', species: '', contaminationRate: 0, description: '', show: false });
       }
       await this._morphMeshToCloud();
-      // Auto-advance to mesh after cloud, in both directions
-      let nextIdx = dir > 0 ? idx + 1 : idx - 1;
-      if (this.timelineStates[nextIdx] && this.timelineStates[nextIdx].type === 'mesh') {
-        this._swipeLocked = false;
-        setTimeout(() => {
-          if (this._activeMorphIdx === idx) {
-            this.morphToTimelineState(nextIdx, dir);
-          }
-        }, 100);
-      } else {
-        this._swipeLocked = false;
+      // Only auto-advance if NOT the last cloud state
+      if (idx !== this.timelineStates.length - 1) {
+        let nextIdx = dir > 0 ? idx + 1 : idx - 1;
+        if (this.timelineStates[nextIdx] && this.timelineStates[nextIdx].type === 'mesh') {
+          this._swipeLocked = false;
+          setTimeout(() => {
+            if (this._activeMorphIdx === idx) {
+              this.morphToTimelineState(nextIdx, dir);
+            }
+          }, 100);
+          return;
+        }
       }
+      // If this is the last cloud state, show outro overlay
+      const outro = document.getElementById('outro-overlay');
+      if (idx === this.timelineStates.length - 1 && outro) {
+        outro.style.display = 'flex';
+        void outro.offsetWidth;
+        outro.classList.remove('fade-out');
+        setTimeout(() => { outro.style.opacity = 1; }, 10);
+      }
+      this._swipeLocked = false;
       return;
     }
 
     // --- Mesh state: always morph from current (cloud or mesh) to mesh, then overlay, then contamination highlight ---
     if (state.type === 'mesh') {
-      const meshMorphDuration = 3.0; // keep in sync with _morphCloudToMesh default
-      await this._morphCloudToMesh(state.mesh, meshMorphDuration); // duration x2
+      const meshToCloudDuration = 3.0;
+      const cloudToMeshDuration = 3.0;
+      await this._morphCloudToMesh(state.mesh, cloudToMeshDuration);
+      // Unlock navigation 400ms after mesh morph completes
+      setTimeout(() => { this._swipeLocked = false; }, 750);
       if (window.updateTimelineOverlay) {
         const entry = state.entry;
         // Calculate step index (mesh states only)
@@ -346,8 +384,6 @@ this._gotoTimelineState = (dir) => {
       const version = this._contamHighlightVersion;
       // Start contamination highlight immediately with stat animation
       this.startContaminationHighlight?.(contaminationRate, version);
-      // Unlock navigation after morph duration (matches mesh morph)
-      setTimeout(() => { this._swipeLocked = false; },  2500);
       return;
     }
 
@@ -357,6 +393,18 @@ this._gotoTimelineState = (dir) => {
         window.updateTimelineOverlay({ year: '', event: '', species: '', contaminationRate: 0, description: '', show: false });
       }
       await this._morphMeshToCloud();
+      // Show outro overlay ONLY if this is the last cloud state (after last mesh)
+      const outro = document.getElementById('outro-overlay');
+      if (idx === this.timelineStates.length - 1 && outro) {
+        outro.style.display = 'flex';
+        void outro.offsetWidth;
+        outro.classList.remove('fade-out');
+        setTimeout(() => { outro.style.opacity = 1; }, 10);
+      } else if (outro) {
+        outro.style.opacity = 0;
+        outro.classList.add('fade-out');
+        setTimeout(() => { outro.style.display = 'none'; }, 800);
+      }
       this._swipeLocked = false;
       return;
     }
@@ -386,27 +434,8 @@ this._gotoTimelineState = (dir) => {
   }
 
   // --- Cloud→mesh morph with custom easing ---
-  async _morphCloudToMesh(meshName, duration = 2.0, easing = 'easeIn') {
-    // --- Camera orbit animation: 90deg right (clockwise), ease-in-out, match morph duration ---
-    const startAngle = this.orbitAngle || 0;
-    const endAngle = startAngle + Math.PI / 2; // 90deg right (CW)
-    const startAngle2 = this.orbitAngle2 || 0;
-    // Animate orbitAngle during morph
-    let t = 0;
-    const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-    const animateCamera = () => {
-      t += 1 / 60 / duration;
-      let progress = Math.min(1, t);
-      progress = easeInOut(progress);
-      this.orbitAngle = startAngle + (endAngle - startAngle) * progress;
-      // Optionally, keep orbitAngle2 unchanged for now
-      if (progress < 1) {
-        requestAnimationFrame(animateCamera);
-      } else {
-        this.orbitAngle = endAngle;
-      }
-    };
-    animateCamera();
+  async _morphCloudToMesh(meshName, duration = 2.0, easing = 'easeInOut') {
+    // Remove camera orbit animation for direct morph
     const gltf = this.glbCache[meshName];
     if (!gltf) return;
     let mesh;

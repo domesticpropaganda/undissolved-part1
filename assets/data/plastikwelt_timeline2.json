@@ -5,10 +5,10 @@
     "Species": "marine plankton",
     "Contam. Rate (%)": 2,
     "contaminationRate": 0.02,
-    "description": "of sampled jellyfish contained small plastic fragments entangled in their gelatinous tissues.",
+    "description": "of sampled jellyfish showed entanglement or ingestion of synthetic fragments floating in mid-ocean gyres.",
     "plastic_types": "PE, PS, fragments",
     "mesh": "jellyfish.glb",
-    "source": "Textile fibers from early synthetic clothing, offshore waste dumping"
+    "source": "Synthetic fiber runoff from early plastic textiles and maritime waste."
   },
   {
     "year": 1990,
@@ -16,21 +16,21 @@
     "Species": "fish",
     "Contam. Rate (%)": 12,
     "contaminationRate": 0.12,
-    "description": "of studied fish were found with synthetic fragments in their stomachs or intestines.",
+    "description": "of fish examined had microplastic particles embedded in their gastrointestinal tracts or surrounding organs.",
     "plastic_types": "PE, PP, PS",
     "mesh": "fish.glb",
-    "source": "Fishing gear, packaging waste, industrial pellets"
+    "source": "Accumulated microplastic particles from urban waste and degraded packaging materials."
   },
   {
     "year": 2000,
     "event": "Sea turtles found with plastic bags and debris in stomachs and airways",
-    "Species": "bird",
+    "Species": "reptile",
     "Contam. Rate (%)": 28,
     "contaminationRate": 0.28,
     "description": "of examined sea turtles showed signs of plastic ingestion or obstruction in their digestive or respiratory systems.",
     "plastic_types": "PE, PP, PS, PET, PA, PES",
     "mesh": "turtle.glb",
-    "source": "Plastic bags, marine debris, ghost nets"
+    "source": "Plastic bags and food wrappers from tourism and fisheries discarded at sea."
   },
   {
     "year": 2010,
@@ -38,10 +38,10 @@
     "Species": "human (stool)",
     "Contam. Rate (%)": 40,
     "contaminationRate": 0.4,
-    "description": "of human stool samples tested contained multiple types of microplastic residues.",
+    "description": "of tested human stool samples revealed traces of synthetic polymers ingested through food or water exposure.",
     "plastic_types": "PP, PET, PE, PS, PA, PES, HDPE, LDPE, EVA",
     "mesh": "human.glb",
-    "source": "Contaminated food and water supply, air exposure"
+    "source": "Contaminated seafood, bottled water, and packaging-derived microplastics in the food chain."
   },
   {
     "year": 2020,
@@ -49,10 +49,10 @@
     "Species": "bird",
     "Contam. Rate (%)": 65,
     "contaminationRate": 0.65,
-    "description": "of seabird species studied had plastic particles lodged in their digestive systems.",
+    "description": "of seabirds studied contained plastic materials in their stomachs, often mistaking them for natural food.",
     "plastic_types": "PE, PP, PS, PET",
     "mesh": "bird.glb",
-    "source": "Ocean plastic accumulation, contaminated fish diets"
+    "source": "Floating plastic debris from fishing gear, packaging waste, and consumer plastics."
   },
   {
     "year": 2023,
@@ -60,20 +60,20 @@
     "Species": "human (placenta)",
     "Contam. Rate (%)": 82,
     "contaminationRate": 0.82,
-    "description": "of human placental samples analyzed showed traces of polymer-based contaminants.",
+    "description": "of human placental samples analyzed contained detectable microplastic fragments within tissue and blood-facing surfaces.",
     "plastic_types": "PP, PET, PE, PA",
     "mesh": "placenta.glb",
-    "source": "Microplastics in maternal bloodstreams, indoor dust"
+    "source": "Airborne microplastics and food-related contamination absorbed during pregnancy."
   },
-  {
-    "year": 2030,
-    "event": "Forecast: global contamination at critical level",
-    "Species": "all",
-    "Contam. Rate (%)": 90,
-    "contaminationRate": 0.9,
-    "description": "of all global species are forecasted to carry measurable amounts of plastic particles.",
-    "plastic_types": "PE, PP, PET, PS, PVC, PA, PES",
-    "mesh": "earth.glb",
-    "source": "Widespread industrial pollution, atmospheric deposition"
-  }
+{
+  "year": 2072,
+  "event": "Plastic contamination saturates all ecosystems, prompting irreversible biological shifts",
+  "Species": "all",
+  "Contam. Rate (%)": 98,
+  "contaminationRate": 0.98,
+  "description": "of global species are affected by plastic particles embedded in tissues, cells, or reproductive systems.",
+  "plastic_types": "All major polymers including nanoplastics",
+  "mesh": "earth.glb",
+  "source": "Projected from long-term ecological modeling and transgenerational contamination trends"
+}
 ]
