@@ -137,6 +137,7 @@ export class Scene {
       map: null,
       alphaTest: 0.01 // ensures sharp edges
     });
+    
     this.points = new THREE.Points(geometry, material);
     this.scene.add(this.points);
   }
@@ -172,7 +173,7 @@ export class Scene {
         const dy = py - this.camera.position.y;
         const dz = pz - this.camera.position.z;
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        const alpha = THREE.MathUtils.clamp(1.5 - dist * 0.3, 0.2, 1.0);
+        const alpha = THREE.MathUtils.clamp(1.5 - dist * 0.25, 0.2, 1.0);
         colors.setW(i, alpha);
       }
       colors.needsUpdate = true;
@@ -377,7 +378,8 @@ this._gotoTimelineState = (dir) => {
           description: entry.description,
           show: true,
           step: meshIdx + 1,
-          totalSteps: meshStates.length
+          totalSteps: meshStates.length,
+          references: entry.references // Pass references for [SRC] link
         });
       }
       const contaminationRate = state.entry?.contaminationRate || 0;
@@ -528,7 +530,7 @@ this._gotoTimelineState = (dir) => {
     const delays = redIndices.map(() => Math.random() * 1.5);
     const startTime = performance.now();
     // Target color: #FF0138 (rgb: 255,1,56)
-    const contamR = 255/255, contamG = 1/255, contamB = 56/255;
+    const contamR = 213/255, contamG = 0/255, contamB = 11/255;
     const animate = () => {
       if (!running || version !== this._contamHighlightVersion) return;
       const now = performance.now();

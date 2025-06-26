@@ -6,7 +6,7 @@ window.scrollTo(0, 0);
 import { Scene } from './scene.js';
 import './styles/main.css';
  // Overlay update logic
-    window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps }) {
+    window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps, references }) {
       const header = document.querySelector('.overlay-header');
       const yearEl = document.querySelector('.overlay-year');
       const stat = document.querySelector('.overlay-stat');
@@ -25,14 +25,13 @@ import './styles/main.css';
         stat.style.opacity = 0;
         statMain.style.opacity = 0;
         statSublabel.style.opacity = 0;
-        speciesEl.style.opacity = 0;
         stepBars.innerHTML = '';
         return;
       }
       // Set content
       yearEl.textContent = year;
       statMain.textContent = Math.round(contaminationRate * 100) + '%';
-      speciesEl.textContent = species || '';
+      // speciesEl.textContent = species || ''; // Removed: do not show species
       // Step bars
       if (typeof step === 'number' && typeof totalSteps === 'number') {
         let bars = '';
@@ -58,7 +57,7 @@ import './styles/main.css';
       statSublabel.style.display = 'none';
       stat.style.opacity = 1; // container always visible for layout
       statMain.textContent = '00%'; // Reset stat to 00% before anim
-      speciesEl.style.opacity = 0;
+      // speciesEl.style.opacity = 0; // Removed: do not show species
       setTimeout(() => {
         yearEl.style.transition = 'opacity 0.5s';
         yearEl.style.opacity = 1;
@@ -105,9 +104,12 @@ import './styles/main.css';
                   i++;
                   setTimeout(typeWriter, 9); // speed in ms per letter
                 } else {
-                  // Fade in species after typewriter completes
-                  speciesEl.style.transition = 'opacity 0.5s';
-                  speciesEl.style.opacity = 1;
+                  // Append [SRC] link if references exists
+                  if (references) {
+                    statSublabel.innerHTML += ` <a alt="Click for related study" href="${references}" target="_blank" rel="noopener noreferrer">[+]</a>`;
+                  }
+                  // speciesEl.style.transition = 'opacity 0.5s';
+                  // speciesEl.style.opacity = 1; // Removed: do not show species
                 }
               }
               typeWriter();

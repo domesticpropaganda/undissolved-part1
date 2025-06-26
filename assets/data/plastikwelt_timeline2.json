@@ -2,7 +2,7 @@
   {
     "year": 1972,
     "event": "First synthetic fibers observed in jellyfish tentacles (Sargasso Sea)",
-    "Species": "jellyfish",
+    "Species": "marine plankton",
     "Contam. Rate (%)": 2,
     "contaminationRate": 0.02,
     "description": "of sampled jellyfish showed entanglement or ingestion of synthetic fragments floating in mid-ocean gyres.",
@@ -20,17 +20,6 @@
     "plastic_types": "PE, PP, PS",
     "mesh": "fish.glb",
     "source": "Accumulated microplastic particles from urban waste and degraded packaging materials."
-  },
-  {
-    "year": 2000,
-    "event": "Sea turtles found with plastic bags and debris in stomachs and airways",
-    "Species": "reptile",
-    "Contam. Rate (%)": 28,
-    "contaminationRate": 0.28,
-    "description": "of examined sea turtles showed signs of plastic ingestion or obstruction in their digestive or respiratory systems.",
-    "plastic_types": "PE, PP, PS, PET, PA, PES",
-    "mesh": "turtle.glb",
-    "source": "Plastic bags and food wrappers from tourism and fisheries discarded at sea."
   },
   {
     "year": 2010,
@@ -51,7 +40,7 @@
     "contaminationRate": 0.65,
     "description": "of seabirds studied contained plastic materials in their stomachs, often mistaking them for natural food.",
     "plastic_types": "PE, PP, PS, PET",
-    "mesh": "bird.glb",
+    "mesh": "seagull.glb",
     "source": "Floating plastic debris from fishing gear, packaging waste, and consumer plastics."
   },
   {

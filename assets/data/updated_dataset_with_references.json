@@ -1,0 +1,58 @@
+[
+  {
+    "year": 1990,
+    "event": "First microplastics documented in fish gut contents",
+    "Species": "fish",
+    "Contam. Rate (%)": 12,
+    "contaminationRate": 0.12,
+    "description": "of fish examined had microplastic particles embedded in their gastrointestinal tracts or surrounding organs.",
+    "mesh": "fish.glb",
+    "references": "https://doi.org/10.1016/j.marpolbul.2012.11.028"
+  },
+  {
+    "year": 2000,
+    "event": "Sea turtles found with plastic bags and debris in stomachs and airways",
+    "Species": "reptile",
+    "Contam. Rate (%)": 28,
+    "contaminationRate": 0.28,
+    "description": "of examined sea turtles showed signs of plastic ingestion or obstruction in their digestive or respiratory systems.",
+    "mesh": "turtle.glb",
+    "references": "https://doi.org/10.1111/gcb.12456"
+    
+  },
+  {
+    "year": 2020,
+    "event": "Nearly 9 in 10 seabirds carry microplastics",
+    "Species": "bird",
+    "Contam. Rate (%)": 65,
+    "contaminationRate": 0.65,
+    "description": "of seabirds studied contained plastic materials in their stomachs, often mistaking them for natural food.",
+    "mesh": "seagull.glb",
+    "references": "https://doi.org/10.1073/pnas.1502108112"
+    
+  },
+  {
+    "year": 2023,
+    "event": "Microplastics found in human placentas",
+    "Species": "human (placenta)",
+    "Contam. Rate (%)": 82,
+    "contaminationRate": 0.82,
+    "description": "of human placental samples analyzed contained detectable microplastic fragments within tissue and blood-facing surfaces.",
+    "plastic_types": "PP, PET, PE, PA",
+    "mesh": "placenta.glb",
+    "source": "Airborne microplastics and food-related contamination absorbed during pregnancy.",
+    "references": "https://doi.org/10.1016/j.envint.2020.106274"
+  },
+  {
+    "year": 2090,
+    "event": "Plastic contamination saturates all ecosystems, prompting irreversible biological shifts",
+    "Species": "all",
+    "Contam. Rate (%)": 98,
+    "contaminationRate": 0.98,
+    "description": "of global species are affected by plastic particles embedded in tissues, cells, or reproductive systems.",
+    "plastic_types": "All major polymers including nanoplastics",
+    "mesh": "earth.glb",
+    "source": "Projected from long-term ecological modeling and transgenerational contamination trends",
+    "references": ""
+  }
+]

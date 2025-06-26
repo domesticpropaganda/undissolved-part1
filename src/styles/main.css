@@ -1,13 +1,27 @@
-/* Example CSS for fullscreen canvas */
+/* Main Styles for Plastik Welt Scroll Visualization App */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+:root {
+  --contaminated-red: #FF0138;
+  --chalk-white: #efefef;
+  --ghost-white: #ffffff7a;
+}
+/* Responsive adjustments */
 @media (max-width: 900px) {
   #timeline-overlay {
     grid-template-columns: 16px repeat(12, 1fr) 16px;
   }
-  .overlay-year { font-size: 60px; }
-  .overlay-stat-main { font-size: 40px; }
-  .overlay-header, .overlay-footer, .overlay-stat-sublabel { font-size: 14px; }
+  .overlay-year {
+    font-size: 60px;
+  }
+  .overlay-stat-main {
+    font-size: 40px;
+  }
+  .overlay-header,
+  .overlay-footer,
+  .overlay-stat-sublabel {
+    font-size: 14px;
+  }
 }
 
 html, body {
@@ -18,7 +32,41 @@ html, body {
   min-height: 4000px; /* Make page scrollable for morphing */
   font-family: 'Space Grotesk', Arial, sans-serif;
 }
-
+.overlay-year,.overlay-stat-main{
+  font-size: 160px;
+  font-weight: 300; 
+}
+h1{
+   font-size: 160px;
+  font-weight: 300;
+  
+}
+p{
+  font-size:12px;
+  color:var(var(--ghost-white));
+}
+#intro-overlay h2 {
+font-size: 20px;
+ font-weight: 400;
+   letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.overlay-footer,.overlay-header{
+  font-family: 'Space Mono', Arial, sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+a {
+  color: var(--ghost-white);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--contaminated-red);
+}
+a.visited {
+  color: #353535;
+}
+.highlight { color: var(--contaminated-red); }
 #three-canvas {
   display: block;
   position: fixed;
@@ -28,6 +76,7 @@ html, body {
   height: 100vh;
 }
 
+/* Intro Overlay */
 #intro-overlay {
   position: fixed;
   top: 0;
@@ -38,25 +87,19 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0,0,0,0.92); /* or 0.8 if you prefer */
+  background: rgba(0,0,0,0.92);
   z-index: 10000;
   transition: opacity 0.8s cubic-bezier(.4,0,.2,1);
   opacity: 1;
   pointer-events: auto;
 }
-
 #intro-overlay.fade-out {
   opacity: 0;
   pointer-events: none;
 }
-
-#intro-overlay h1 {
-  color: #FF0138;
-  font-size: 160px;
-  font-family: 'Space Grotesk', Arial, sans-serif;
-  /* letter-spacing: 0.12em; */
+#intro-overlay h1,#outro-overlay h1 {
+  color: var(--contaminated-red);
   margin: 0 0 1.2rem 0;
-  font-weight: 300;
   text-shadow: 0 2px 16px #000, 0 0 2px #FF0138;
   opacity: 0;
   transform: translateY(20px);
@@ -64,12 +107,7 @@ html, body {
 }
 
 #intro-overlay h2 {
-  color: #fff;
-  font-size: 20px;
-  font-family: 'Space Grotesk', Arial, sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  color: var(--chalk-white);
   margin: 0;
   opacity: 0;
   transform: translateY(20px);
@@ -78,10 +116,17 @@ html, body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
+/* Timeline Overlay */
 #timeline-overlay {
   position: fixed;
   top: 0;
@@ -93,17 +138,13 @@ html, body {
   display: grid;
   grid-template-columns: 80px repeat(12, 1fr) 80px;
   grid-template-rows: 80px 1fr auto 1fr 80px;
-  font-family: 'Space Grotesk', sans-serif;
 }
 
 .overlay-header {
   grid-column: 1 / -1;
   grid-row: 1;
   margin: 40px auto;
-  font-size: 16px;
-  color: #666;
-  text-transform: uppercase;
-  font-family: 'Space Mono', Arial, sans-serif;
+  color: var(--ghost-white);
   opacity: 1 !important;
   transition: none !important;
   text-align: center;
@@ -126,14 +167,12 @@ html, body {
 .step-bar {
   width: 16px;
   height: 4px;
-  /* border-radius: 4px; */
-  background: #fff;
+  background: var(--chalk-white);
   opacity: 0.25;
   transition: background 0.3s, opacity 0.3s;
 }
-
 .step-bar.active {
-  background: #FF0138;
+  background: var(--contaminated-red);
   opacity: 1;
 }
 
@@ -142,9 +181,7 @@ html, body {
   grid-row: 3;
   align-self: center;
   justify-self: start;
-  font-size: 160px;
-  font-weight: 300;
-  color: #fff;
+  color: var(--chalk-white);
   line-height: 1;
   opacity: 0;
   transition: opacity 0.5s;
@@ -162,12 +199,9 @@ html, body {
 }
 
 .overlay-stat-main {
-  /* font-family: 'Space Mono', Arial, sans-serif; */
-  font-size: 160px;
-  font-weight: 400;
   margin-left: -0.04em;
   letter-spacing: normal;
-  color: #FF0138;
+  color: var(--contaminated-red);
   line-height: 0.75;
   text-align: left;
   display: block;
@@ -177,30 +211,71 @@ html, body {
   position: absolute;
   left: 0;
   top: 100%;
-  margin-top: 8px; /* adjust as needed */
+  margin-top: 16px;
   width: 100%;
-font-family: 'Space Mono', Arial, sans-serif;
-  font-size: 13px;
+  font-family: 'Space Grotesk', Arial, sans-serif;
+  font-size: 15px;
   text-transform: uppercase;
-  color: #ffffffbe;
-  /* margin-top: 16px; */
+  color: var(--ghost-white);
   font-weight: 400;
-  /* max-width: 20vw; */
   display: block;
   text-align: left;
+  pointer-events: auto;
 }
 
 .overlay-footer {
   grid-column: 1 / -1;
   grid-row: 5;
   margin: 0 auto;
-  font-size: 16px;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  color: var(--ghost-white);
   opacity: 1 !important;
   transition: none !important;
   text-align: center;
   pointer-events: none;
   position: static;
+}
+
+/* Outro Overlay */
+#outro-overlay h2{
+   font-size: 80px;
+  font-weight: 300;
+  line-height: 100%;
+  color:var(--contaminated-red)
+}
+#outro-overlay {
+  display: none;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.92);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s cubic-bezier(.4,0,.2,1);
+}
+
+.overlay-content {
+  color: var(--chalk-white, #fff);
+  font-size: 1.3rem;
+  max-width: 60vw;
+  text-align: center;
+  margin: 0 auto;
+}
+
+#outro-close-btn {
+  margin-top: 2.5rem;
+  padding: 0.7em 2.2em;
+  font-size: 1.1rem;
+  background: var(--contaminated-red, #FF0138);
+  color: #fff;
+  border: none;
+  border-radius: 2em;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.2s;
 }
