@@ -5,120 +5,263 @@ window.scrollTo(0, 0);
 
 import { Scene } from './scene.js';
 import './styles/main.css';
- // Overlay update logic
-    window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps, references }) {
-      const header = document.querySelector('.overlay-header');
-      const yearEl = document.querySelector('.overlay-year');
-      const stat = document.querySelector('.overlay-stat');
-      const statMain = document.querySelector('.overlay-stat-main');
-      const statSublabel = document.querySelector('.overlay-stat-sublabel');
-      const speciesEl = document.querySelector('.overlay-species');
-      const footer = document.querySelector('.overlay-footer');
-      const stepBars = document.querySelector('.overlay-step-bars');
-      if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepBars) return;
-      // Header/footer always visible
-      header.textContent = 'UNDISSOLVED';
-      footer.textContent = '\u00a92025 STUDI\u00d8E';
-      // Show/hide stat+year block
-      if (!show) {
-        yearEl.style.opacity = 0;
-        stat.style.opacity = 0;
-        statMain.style.opacity = 0;
-        statSublabel.style.opacity = 0;
-        stepBars.innerHTML = '';
-        return;
-      }
-      // Set content
-      yearEl.textContent = year;
-      statMain.textContent = Math.round(contaminationRate * 100) + '%';
-      // speciesEl.textContent = species || ''; // Removed: do not show species
-      // Step bars
-      if (typeof step === 'number' && typeof totalSteps === 'number') {
-        let bars = '';
-        for (let i = 1; i <= totalSteps; i++) {
-          bars += `<div class="step-bar${i === step ? ' active' : ''}"></div>`;
-        }
-        stepBars.innerHTML = bars;
+
+// --- Ambient sound and click sound system (moved from index.html) ---
+let audioCtx, noiseSource, filter, gainNode;
+let started = false;
+const DEFAULT_AMBIENT_VOLUME = 0.08;
+const BASE_FREQ = 320;
+const MOD_DEPTH = 180; // Hz, how much the frequency oscillates
+const MOD_RATE = 0.07; // Hz, how fast the oscillation is (0.07Hz = ~14s per cycle)
+let freqModActive = false;
+let freqModPhase = 0;
+
+function startFreqModulation() {
+  if (freqModActive) return;
+  freqModActive = true;
+  function modLoop() {
+    if (!freqModActive || !filter) return;
+    freqModPhase += (2 * Math.PI * MOD_RATE) / 60;
+    if (freqModPhase > 2 * Math.PI) freqModPhase -= 2 * Math.PI;
+    if (!window._ambientTransitioning) {
+      filter.frequency.value = BASE_FREQ + Math.sin(freqModPhase) * MOD_DEPTH;
+    }
+    requestAnimationFrame(modLoop);
+  }
+  modLoop();
+}
+function stopFreqModulation() {
+  freqModActive = false;
+}
+
+async function tryStartAmbient() {
+  if (started) return;
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    await audioCtx.resume();
+  }
+  if (!noiseSource) {
+    const bufferSize = 2 * audioCtx.sampleRate;
+    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    noiseSource = audioCtx.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+    noiseSource.loop = true;
+    filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = BASE_FREQ;
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0; // Start muted
+    noiseSource.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    noiseSource.start();
+    startFreqModulation();
+  }
+  started = true;
+  window.removeEventListener('pointerdown', tryStartAmbient);
+  window.removeEventListener('keydown', tryStartAmbient);
+}
+window.addEventListener('pointerdown', tryStartAmbient);
+window.addEventListener('keydown', tryStartAmbient);
+
+function easeInOut(t) {
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+}
+window.setAmbientVolume = function(vol, duration = 1) {
+  if (gainNode && filter && audioCtx) {
+    window._ambientTransitioning = true;
+    const startTime = audioCtx.currentTime;
+    const startGain = gainNode.gain.value;
+    const startFreq = filter.frequency.value;
+    const endGain = vol;
+    const endFreq = 4000;
+    const animate = () => {
+      const now = audioCtx.currentTime;
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = easeInOut(t);
+      gainNode.gain.value = startGain + (endGain - startGain) * eased;
+      filter.frequency.value = startFreq + (endFreq - startFreq) * eased;
+      if (t < 1) {
+        requestAnimationFrame(animate);
       } else {
-        stepBars.innerHTML = '';
+        gainNode.gain.value = endGain;
+        filter.frequency.value = endFreq;
+        window._ambientTransitioning = false;
       }
-      // Highlight first part of description in pink
-      let desc = description || '';
-      let match = desc.match(/^(of [^,\s]+|of [^\s]+)/i);
-      if (match) {
-        statSublabel.innerHTML = `<span class='pink'>${match[0]}</span>` + desc.slice(match[0].length);
+    };
+    animate();
+  }
+};
+window.resetAmbientVolume = function(duration = 0.7) {
+  if (gainNode && filter && audioCtx) {
+    window._ambientTransitioning = true;
+    const startTime = audioCtx.currentTime;
+    const startGain = gainNode.gain.value;
+    const startFreq = filter.frequency.value;
+    const endGain = DEFAULT_AMBIENT_VOLUME;
+    const endFreq = BASE_FREQ;
+    const animate = () => {
+      const now = audioCtx.currentTime;
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = easeInOut(t);
+      gainNode.gain.value = startGain + (endGain - startGain) * eased;
+      filter.frequency.value = startFreq + (endFreq - startFreq) * eased;
+      if (t < 1) {
+        requestAnimationFrame(animate);
       } else {
-        statSublabel.textContent = desc;
+        gainNode.gain.value = endGain;
+        filter.frequency.value = endFreq;
+        window._ambientTransitioning = false;
       }
-      // Animate stat+year block in order: year, contam rate, description
-      yearEl.style.opacity = 0;
-      statMain.style.opacity = 0;
-      statSublabel.style.opacity = 0;
-      statSublabel.style.display = 'none';
-      stat.style.opacity = 1; // container always visible for layout
-      statMain.textContent = '00%'; // Reset stat to 00% before anim
-      // speciesEl.style.opacity = 0; // Removed: do not show species
-      setTimeout(() => {
-        yearEl.style.transition = 'opacity 0.5s';
-        yearEl.style.opacity = 1;
-        setTimeout(() => {
-          statMain.style.transition = 'opacity 0.5s';
-          statMain.style.opacity = 1;
-          // Start contamination percentage animation (no fade)
-          let targetPercent = Math.round((contaminationRate || 0) * 100);
-          let animStart = null;
-          let animDuration = 1200;
-          function animatePercent(ts) {
-            if (!animStart) animStart = ts;
-            let elapsed = ts - animStart;
-            let progress = Math.min(1, elapsed / animDuration);
-            let val = Math.round(targetPercent * progress);
-            statMain.textContent = (val < 10 ? '0' : '') + val + '%';
-            if (progress < 1) {
-              requestAnimationFrame(animatePercent);
+    };
+    animate();
+  }
+};
+window.playClickSound = function() {
+  if (!audioCtx) return;
+  const ctx = audioCtx;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = 400;
+  gain.gain.value = 0.12;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  const now = ctx.currentTime;
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.linearRampToValueAtTime(0, now + 0.045);
+  osc.start(now);
+  osc.stop(now + 0.15);
+  osc.onended = () => {
+    osc.disconnect();
+    gain.disconnect();
+  };
+};
+
+// Overlay update logic
+window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps, references }) {
+  const header = document.querySelector('.overlay-header');
+  const yearEl = document.querySelector('.overlay-year');
+  const stat = document.querySelector('.overlay-stat');
+  const statMain = document.querySelector('.overlay-stat-main');
+  const statSublabel = document.querySelector('.overlay-stat-sublabel');
+  const speciesEl = document.querySelector('.overlay-species');
+  const footer = document.querySelector('.overlay-footer');
+  const stepBars = document.querySelector('.overlay-step-bars');
+  if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepBars) return;
+  // Header/footer always visible
+  header.textContent = 'UNDISSOLVED';
+  footer.textContent = '\u00a92025 STUDI\u00d8E';
+  // Show/hide stat+year block
+  if (!show) {
+    yearEl.style.opacity = 0;
+    stat.style.opacity = 0;
+    statMain.style.opacity = 0;
+    statSublabel.style.opacity = 0;
+    stepBars.innerHTML = '';
+    return;
+  }
+  // Set content
+  yearEl.textContent = year;
+  statMain.textContent = Math.round(contaminationRate * 100) + '%';
+  // speciesEl.textContent = species || ''; // Removed: do not show species
+  // Step bars
+  if (typeof step === 'number' && typeof totalSteps === 'number') {
+    let bars = '';
+    for (let i = 1; i <= totalSteps; i++) {
+      bars += `<div class="step-bar${i === step ? ' active' : ''}"></div>`;
+    }
+    stepBars.innerHTML = bars;
+  } else {
+    stepBars.innerHTML = '';
+  }
+  // Highlight first part of description in pink
+  let desc = description || '';
+  let match = desc.match(/^(of [^,\s]+|of [^\s]+)/i);
+  if (match) {
+    statSublabel.innerHTML = `<span class='pink'>${match[0]}</span>` + desc.slice(match[0].length);
+  } else {
+    statSublabel.textContent = desc;
+  }
+  // Animate stat+year block in order: year, contam rate, description
+  yearEl.style.opacity = 0;
+  statMain.style.opacity = 0;
+  statSublabel.style.opacity = 0;
+  statSublabel.style.display = 'none';
+  stat.style.opacity = 1; // container always visible for layout
+  statMain.textContent = '00%'; // Reset stat to 00% before anim
+  // speciesEl.style.opacity = 0; // Removed: do not show species
+  setTimeout(() => {
+    yearEl.style.transition = 'opacity 0.5s';
+    yearEl.style.opacity = 1;
+    setTimeout(() => {
+      statMain.style.transition = 'opacity 0.5s';
+      statMain.style.opacity = 1;
+      // Play click sound at start of stat-main animation
+      if (window.playClickSound) window.playClickSound();
+      // Start contamination percentage animation (no fade)
+      let targetPercent = Math.round((contaminationRate || 0) * 100);
+      let animStart = null;
+      let animDuration = 1200;
+      function animatePercent(ts) {
+        if (!animStart) animStart = ts;
+        let elapsed = ts - animStart;
+        let progress = Math.min(1, elapsed / animDuration);
+        let val = Math.round(targetPercent * progress);
+        statMain.textContent = (val < 10 ? '0' : '') + val + '%';
+        if (progress < 1) {
+          requestAnimationFrame(animatePercent);
+        } else {
+          statMain.textContent = (targetPercent < 10 ? '0' : '') + targetPercent + '%';
+          // Typewriter effect for sublabel after percent animation
+          statSublabel.style.transition = '';
+          statSublabel.style.display = 'block';
+          statSublabel.style.opacity = 1;
+          let sublabelHTML = '';
+          let pinkSpan = null;
+          let desc = description || '';
+          let match = desc.match(/^(of [^,\s]+|of [^\s]+)/i);
+          let sublabelText = '';
+          if (match) {
+            statSublabel.innerHTML = `<span class='pink'>${match[0]}</span>`;
+            pinkSpan = statSublabel.querySelector('.pink');
+            sublabelText = desc.slice(match[0].length);
+            sublabelHTML = pinkSpan ? pinkSpan.outerHTML : '';
+          } else {
+            statSublabel.innerHTML = '';
+            sublabelText = desc;
+            sublabelHTML = '';
+          }
+          let i = 0;
+          function typeWriter() {
+            // Play click sound only at start of sublabel animation
+            if (i === 0 && window.playClickSound) window.playClickSound();
+            statSublabel.innerHTML = sublabelHTML + sublabelText.slice(0, i);
+            if (i <= sublabelText.length) {
+              i++;
+              setTimeout(typeWriter, 9); // speed in ms per letter
             } else {
-              statMain.textContent = (targetPercent < 10 ? '0' : '') + targetPercent + '%';
-              // Typewriter effect for sublabel after percent animation
-              statSublabel.style.transition = '';
-              statSublabel.style.display = 'block';
-              statSublabel.style.opacity = 1;
-              let sublabelHTML = '';
-              let pinkSpan = null;
-              let desc = description || '';
-              let match = desc.match(/^(of [^,\s]+|of [^\s]+)/i);
-              let sublabelText = '';
-              if (match) {
-                statSublabel.innerHTML = `<span class='pink'>${match[0]}</span>`;
-                pinkSpan = statSublabel.querySelector('.pink');
-                sublabelText = desc.slice(match[0].length);
-                sublabelHTML = pinkSpan ? pinkSpan.outerHTML : '';
-              } else {
-                statSublabel.innerHTML = '';
-                sublabelText = desc;
-                sublabelHTML = '';
+              // Append [SRC] link if references exists
+              if (references) {
+                statSublabel.innerHTML += ` <a alt="Click for related study" href="${references}" target="_blank" rel="noopener noreferrer">[+]</a>`;
               }
-              let i = 0;
-              function typeWriter() {
-                statSublabel.innerHTML = sublabelHTML + sublabelText.slice(0, i);
-                if (i <= sublabelText.length) {
-                  i++;
-                  setTimeout(typeWriter, 9); // speed in ms per letter
-                } else {
-                  // Append [SRC] link if references exists
-                  if (references) {
-                    statSublabel.innerHTML += ` <a alt="Click for related study" href="${references}" target="_blank" rel="noopener noreferrer">[+]</a>`;
-                  }
-                  // speciesEl.style.transition = 'opacity 0.5s';
-                  // speciesEl.style.opacity = 1; // Removed: do not show species
-                }
-              }
-              typeWriter();
+              // speciesEl.style.transition = 'opacity 0.5s';
+              // speciesEl.style.opacity = 1; // Removed: do not show species
             }
           }
-          requestAnimationFrame(animatePercent);
-        }, 400);
-      }, 200);
-    };
+          typeWriter();
+        }
+      }
+      requestAnimationFrame(animatePercent);
+    }, 400);
+  }, 200);
+};
 const scene = new Scene();
 
 // No need to call handleScroll; scroll is handled internally by Scene

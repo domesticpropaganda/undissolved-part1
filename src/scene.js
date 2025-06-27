@@ -332,6 +332,7 @@ this._gotoTimelineState = (dir) => {
       if (window.updateTimelineOverlay) {
         window.updateTimelineOverlay({ year: '', event: '', species: '', contaminationRate: 0, description: '', show: false });
       }
+      if (window.setAmbientVolume) window.setAmbientVolume(0); // Fade out ambient noise
       await this._morphMeshToCloud();
       // Only auto-advance if NOT the last cloud state
       if (idx !== this.timelineStates.length - 1) {
@@ -362,6 +363,7 @@ this._gotoTimelineState = (dir) => {
     if (state.type === 'mesh') {
       const meshToCloudDuration = 3.0;
       const cloudToMeshDuration = 3.0;
+      if (window.resetAmbientVolume) window.resetAmbientVolume(); // Fade in ambient noise
       await this._morphCloudToMesh(state.mesh, cloudToMeshDuration);
       // Unlock navigation 400ms after mesh morph completes
       setTimeout(() => { this._swipeLocked = false; }, 750);
