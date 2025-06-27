@@ -43,7 +43,11 @@ h1{
 }
 p{
   font-size:12px;
-  color:var(var(--ghost-white));
+  color: var(--ghost-white);
+}
+#intro-overlay p {
+color: var(--ghost-white);
+
 }
 #intro-overlay h2 {
 font-size: 20px;
@@ -262,7 +266,7 @@ a.visited {
 .overlay-content {
   color: var(--chalk-white, #fff);
   font-size: 1.3rem;
-  max-width: 60vw;
+  max-width: 75vw;
   text-align: center;
   margin: 0 auto;
 }
