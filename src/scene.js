@@ -70,7 +70,7 @@ export class Scene {
 
   async preloadAllAssets() {
     // Load timeline JSON
-    const resp = await fetch('/assets/data/plastikwelt_timeline.json');
+    const resp = await fetch(import.meta.env.BASE_URL + 'assets/data/plastikwelt_timeline.json');
     const timeline = await resp.json();
     this.timeline = timeline;
     console.log('[DEBUG] Timeline loaded:', timeline);
@@ -91,7 +91,7 @@ export class Scene {
     };
     const promises = meshList.map(meshName => {
       return new Promise(resolve => {
-        loader.load(`/assets/models/${meshName}`, gltf => {
+        loader.load(import.meta.env.BASE_URL + 'assets/models/' + meshName, gltf => {
           this.glbCache[meshName] = gltf;
           updatePreloader(meshName);
           resolve();

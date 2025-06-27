@@ -1,0 +1,62 @@
+[
+   {
+    "year": 1990,
+    "event": "First microplastics documented in fish gut contents",
+    "Species": "fish",
+    "Contam. Rate (%)": 12,
+    "contaminationRate": 0.12,
+    "description": "<span class=\"highlight\">of fish examined </span>had microplastic particles embedded in their gastrointestinal tracts or surrounding organs.",
+    "plastic_types": "PE, PP, PS",
+    "mesh": "fish.glb",
+    "source": "Accumulated microplastic particles from urban waste and degraded packaging materials.",
+    "references": "https://pubmed.ncbi.nlm.nih.gov/26365568/"
+  },
+  {
+    "year": 2004,
+    "event": "Sea turtles found with plastic bags and debris in stomachs and airways",
+    "Species": "reptile",
+    "Contam. Rate (%)": 26,
+    "contaminationRate": 0.26,
+    "description": "<span class=\"highlight\">of studied sea turtles</span> showed evidence of plastic ingestion affecting digestion and respiration.",
+    "plastic_types": "PE, PP, PS, PET",
+    "mesh": "turtle.glb",
+    "source": "Floating macroplastics from shipping, tourism, and coastal dumping.",
+    "references": "https://pubmed.ncbi.nlm.nih.gov/26365568/"
+  },
+  {
+    "year": 2020,
+    "event": "Nearly 9 in 10 seabirds carry microplastics",
+    "Species": "bird",
+    "Contam. Rate (%)": 65,
+    "contaminationRate": 0.65,
+    "description": "<span class=\"highlight\">of seabirds studied </span>contained plastic materials in their stomachs, often mistaking them for natural food.",
+    "plastic_types": "PE, PP, PS, PET",
+    "mesh": "seagull.glb",
+    "source": "Floating plastic debris from fishing gear, packaging waste, and consumer plastics.",
+    "references": ""
+  },
+  {
+    "year": 2023,
+    "event": "Microplastics found in human placentas",
+    "Species": "human (placenta)",
+    "Contam. Rate (%)": 82,
+    "contaminationRate": 0.82,
+    "description": "<span class=\"highlight\">of human placental samples analyzed</span> contained detectable microplastic fragments within tissue and blood-facing surfaces.",
+    "plastic_types": "PP, PET, PE, PA",
+    "mesh": "placenta.glb",
+    "source": "Airborne microplastics and food-related contamination absorbed during pregnancy.",
+    "references": "https://www.sciencedirect.com/science/article/pii/S0160412020322297"
+  },
+  {
+    "year": 2090,
+    "event": "Plastic contamination saturates all ecosystems, prompting irreversible biological shifts",
+    "Species": "all",
+    "Contam. Rate (%)": 98,
+    "contaminationRate": 0.98,
+    "description": "<span class=\"highlight\">of global species</span> are affected by plastic particles embedded in tissues, cells, or reproductive systems.",
+    "plastic_types": "All major polymers including nanoplastics",
+    "mesh": "earth.glb",
+    "source": "Projected from long-term ecological modeling and transgenerational contamination trends",
+    "references":  ""
+  }
+]
