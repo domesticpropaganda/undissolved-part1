@@ -76,7 +76,67 @@ window.addEventListener('keydown', tryStartAmbient);
 function easeInOut(t) {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
+// --- Sound toggle logic ---
+(function() {
+  // Main overlay sound toggle (intro)
+  const btn = document.getElementById('sound-toggle');
+  if (btn) {
+    btn.textContent = 'Sound: Off';
+    if (window.gainNode) {
+      window.gainNode.gain.value = 0;
+    }
+    btn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      btn.textContent = soundOn ? 'Sound: On' : 'Sound: Off';
+      if (window.gainNode) {
+        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
+      }
+      // Sync footer icon
+      const footerBtn = document.getElementById('footer-sound-toggle');
+      if (footerBtn) {
+        footerBtn.classList.toggle('sound-off', !soundOn);
+        footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
+      }
+    });
+    Object.defineProperty(window, 'gainNode', {
+      get() { return gainNode; },
+      configurable: true
+    });
+    Object.defineProperty(window, 'DEFAULT_AMBIENT_VOLUME', {
+      get() { return DEFAULT_AMBIENT_VOLUME; },
+      configurable: true
+    });
+  }
+  // Footer sound toggle
+  const footerBtn = document.getElementById('footer-sound-toggle');
+  if (footerBtn) {
+    // Set initial state
+    footerBtn.classList.toggle('sound-off', !soundOn);
+    footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
+    footerBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      if (window.gainNode) {
+        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
+      }
+      footerBtn.classList.toggle('sound-off', !soundOn);
+      footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
+      // Sync intro button
+      const btn = document.getElementById('sound-toggle');
+      if (btn) {
+        btn.textContent = soundOn ? 'Sound: On' : 'Sound: Off';
+      }
+    });
+  }
+
+  // Ensure sound is off on init
+  if (window.gainNode) {
+    window.gainNode.gain.value = 0;
+  }
+})();
+
+// --- Ensure all sound transitions respect soundOn state ---
 window.setAmbientVolume = function(vol, duration = 0.7) {
+  if (!soundOn) return; // Only allow if sound is on
   if (gainNode && filter && audioCtx) {
     window._ambientTransitioning = true;
     const startTime = audioCtx.currentTime;
@@ -102,6 +162,7 @@ window.setAmbientVolume = function(vol, duration = 0.7) {
   }
 };
 window.resetAmbientVolume = function(duration = 1) {
+  if (!soundOn) return; // Only allow if sound is on
   if (gainNode && filter && audioCtx) {
     window._ambientTransitioning = true;
     const startTime = audioCtx.currentTime;
@@ -127,6 +188,7 @@ window.resetAmbientVolume = function(duration = 1) {
   }
 };
 window.playClickSound = function() {
+  if (!soundOn) return; // Only allow if sound is on
   if (!audioCtx) return;
   const ctx = audioCtx;
   const osc = ctx.createOscillator();
@@ -146,7 +208,34 @@ window.playClickSound = function() {
     gain.disconnect();
   };
 };
+window.playClickSoundTwo = function() {
+  if (!soundOn) return;
+  if (!audioCtx) return;
 
+  function playOnce(delay = 0) {
+    const ctx = audioCtx;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 430;
+    gain.gain.value = 0.12;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    const now = ctx.currentTime + delay;
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.linearRampToValueAtTime(0, now + 0.15);
+    osc.start(now);
+    osc.stop(now + 0.15 + delay);
+    osc.onended = () => {
+      osc.disconnect();
+      gain.disconnect();
+    };
+  }
+
+    playOnce(0.1); 
+  playOnce(0.2); 
+     // Play again after 120ms
+};
 // Overlay update logic
 window.updateTimelineOverlay = function({ year, event, species, contaminationRate, description, show, step, totalSteps, references }) {
   const header = document.querySelector('.overlay-header');
@@ -201,11 +290,13 @@ window.updateTimelineOverlay = function({ year, event, species, contaminationRat
   setTimeout(() => {
     yearEl.style.transition = 'opacity 0.5s';
     yearEl.style.opacity = 1;
+     setTimeout(() => window.playClickSound(), 80); // 80ms delay before sound
     setTimeout(() => {
       statMain.style.transition = 'opacity 0.5s';
       statMain.style.opacity = 1;
       // Play click sound at start of stat-main animation
       if (window.playClickSound) window.playClickSound();
+      
       // Start contamination percentage animation (no fade)
       let targetPercent = Math.round((contaminationRate || 0) * 100);
       let animStart = null;
@@ -243,7 +334,7 @@ window.updateTimelineOverlay = function({ year, event, species, contaminationRat
           function typeWriter() {
             // Play click sound only at start of sublabel animation, with a short delay
             if (i === 0 && window.playClickSound) {
-              setTimeout(() => window.playClickSound(), 80); // 80ms delay before sound
+              setTimeout(() => window.playClickSoundTwo(), 80); // 80ms delay before sound
             }
             statSublabel.innerHTML = sublabelHTML + sublabelText.slice(0, i);
             if (i <= sublabelText.length) {
@@ -274,45 +365,3 @@ const scene = new Scene();
 
 // No need to call animate here; Scene handles it after assets load
 // scene.animate();
-
-// --- Sound toggle logic ---
-(function() {
-  // Main overlay sound toggle (intro)
-  const btn = document.getElementById('sound-toggle');
-  if (btn) {
-    btn.textContent = 'Sound: Off';
-    if (window.gainNode) {
-      window.gainNode.gain.value = 0;
-    }
-    btn.addEventListener('click', () => {
-      soundOn = !soundOn;
-      btn.textContent = soundOn ? 'Sound: On' : 'Sound: Off';
-      if (window.gainNode) {
-        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
-      }
-    });
-    Object.defineProperty(window, 'gainNode', {
-      get() { return gainNode; },
-      configurable: true
-    });
-    Object.defineProperty(window, 'DEFAULT_AMBIENT_VOLUME', {
-      get() { return DEFAULT_AMBIENT_VOLUME; },
-      configurable: true
-    });
-  }
-  // Footer sound toggle
-  const footerBtn = document.getElementById('footer-sound-toggle');
-  if (footerBtn) {
-    // Set initial state
-    footerBtn.classList.toggle('sound-off', !soundOn);
-    footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
-    footerBtn.addEventListener('click', () => {
-      soundOn = !soundOn;
-      if (window.gainNode) {
-        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
-      }
-      footerBtn.classList.toggle('sound-off', !soundOn);
-      footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
-    });
-  }
-})();
