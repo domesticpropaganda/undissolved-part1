@@ -5,11 +5,11 @@
     "Species": "fish",
     "Contam. Rate (%)": 12,
     "contaminationRate": 0.12,
-    "description": "<span class=\"highlight\">of fish examined </span>had microplastic particles embedded in their gastrointestinal tracts or surrounding organs.",
+    "description": "<span class=\"highlight\">of fish examined </span>had microplastic particles embedded in their gastrointestinal tracts or surrounding organs.<br><br><span class=\"highlight\">Potential sources are</span> Accumulated microplastic particles from urban waste and degraded packaging materials.",
     "plastic_types": "PE, PP, PS",
     "mesh": "fish.glb",
     "source": "Accumulated microplastic particles from urban waste and degraded packaging materials.",
-    "references": "https://pubmed.ncbi.nlm.nih.gov/26365568/"
+    "references": ""
   },
   {
     "year": 2004,
@@ -17,11 +17,11 @@
     "Species": "reptile",
     "Contam. Rate (%)": 26,
     "contaminationRate": 0.26,
-    "description": "<span class=\"highlight\">of studied sea turtles</span> showed evidence of plastic ingestion affecting digestion and respiration.",
+    "description": "<span class=\"highlight\">of studied sea turtles</span> showed evidence of plastic ingestion affecting digestion and respiration.<br><br><span class=\"highlight\">Potential sources are</span> Floating macroplastics from shipping, tourism, and coastal dumping.",
     "plastic_types": "PE, PP, PS, PET",
     "mesh": "turtle.glb",
     "source": "Floating macroplastics from shipping, tourism, and coastal dumping.",
-    "references": "https://pubmed.ncbi.nlm.nih.gov/26365568/"
+    "references": ""
   },
   {
     "year": 2020,
@@ -29,7 +29,7 @@
     "Species": "bird",
     "Contam. Rate (%)": 65,
     "contaminationRate": 0.65,
-    "description": "<span class=\"highlight\">of seabirds studied </span>contained plastic materials in their stomachs, often mistaking them for natural food.",
+    "description": "<span class=\"highlight\">of seabirds studied </span>contained plastic materials in their stomachs, often mistaking them for natural food.<br><br><span class=\"highlight\">Potential sources are</span> Floating plastic debris from fishing gear, packaging waste, and consumer plastics.",
     "plastic_types": "PE, PP, PS, PET",
     "mesh": "seagull.glb",
     "source": "Floating plastic debris from fishing gear, packaging waste, and consumer plastics.",
@@ -41,11 +41,11 @@
     "Species": "human (placenta)",
     "Contam. Rate (%)": 82,
     "contaminationRate": 0.82,
-    "description": "<span class=\"highlight\">of human placental samples analyzed</span> contained detectable microplastic fragments within tissue and blood-facing surfaces.",
+    "description": "<span class=\"highlight\">of human placental samples analyzed</span> contained detectable microplastic fragments within tissue and blood-facing surfaces.<br><br><span class=\"highlight\">Potential sources are</span> Airborne microplastics and food-related contamination absorbed during pregnancy.",
     "plastic_types": "PP, PET, PE, PA",
     "mesh": "placenta.glb",
     "source": "Airborne microplastics and food-related contamination absorbed during pregnancy.",
-    "references": "https://www.sciencedirect.com/science/article/pii/S0160412020322297"
+    "references": ""
   },
   {
     "year": 2090,
@@ -53,7 +53,7 @@
     "Species": "all",
     "Contam. Rate (%)": 98,
     "contaminationRate": 0.98,
-    "description": "<span class=\"highlight\">of global species</span> are affected by plastic particles embedded in tissues, cells, or reproductive systems.",
+    "description": "<span class=\"highlight\">of global species</span> are affected by plastic particles embedded in tissues, cells, or reproductive systems.<br><br><span class=\"highlight\">Potential sources are </span>Lack of social, political and scientific breakthroughs.",
     "plastic_types": "All major polymers including nanoplastics",
     "mesh": "earth.glb",
     "source": "Projected from long-term ecological modeling and transgenerational contamination trends",

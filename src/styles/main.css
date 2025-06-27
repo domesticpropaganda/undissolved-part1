@@ -14,7 +14,7 @@ html, body {
   width: 100vw;
   min-height: 4000px; /* Make page scrollable for morphing */
   font-family: 'Space Grotesk', Arial, sans-serif;
-  font-size: clamp(12px, 1.2vw, 18px);
+  font-size: clamp(12px, 1.2vw, 16px);
 }
 
 .overlay-year, .overlay-stat-main, h1 {
@@ -36,18 +36,32 @@ h2, #intro-overlay h2, #outro-overlay h2 {
 }
 
 p {
-  font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+  /* font-size: clamp(0.8rem, 1.2vw, 1.1rem); */
   color: var(--ghost-white);
 }
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
   #timeline-overlay {
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     display: grid !important;
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto auto auto;
-    padding: 24px 0 0 24px;
+    padding: 0;
+  }
+  .overlay-header {
+    grid-row: 1;
+    grid-column: 1;
+    margin: 0;
+  }
+  .overlay-footer {
+    grid-row: 6;
+    grid-column: 1;
+    margin: 0;
   }
   .overlay-step-bars {
     grid-row: 2;
@@ -78,22 +92,14 @@ p {
     align-self: start;
     justify-self: start;
   }
-  .overlay-header {
-    grid-row: 5;
-    grid-column: 1;
-  }
-    .overlay-header .overlay-header-sub {
+  .overlay-header .overlay-header-sub {
     display: none!important;
-  }
-  .overlay-footer {
-    grid-row: 6;
-    grid-column: 1;
   }
   .overlay-stat-sublabel {
     position: static !important;
     margin-top: 16px !important;
     font-size: clamp(0.7rem, 2vw, 13px) !important;
-    color: var(--ghost-white) !important;
+    color: var(--chalk-white) !important;
     text-align: left !important;
     width: auto !important;
     max-width: 90vw;
@@ -106,7 +112,7 @@ color: var(--ghost-white);
 
 }
 #intro-overlay h2 {
-font-size: 20px;
+font-size: clamp(0.7rem, 2vw, 16px) !important;
  font-weight: 400;
    letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -114,7 +120,8 @@ font-size: 20px;
 }
 .overlay-footer,.overlay-header{
   font-family: 'Space Mono', Arial, sans-serif;
-  font-size: 16px;
+  font-size: clamp(0.7rem, 2vw, 13px) !important;
+  
   text-transform: uppercase;
 }
 a {
@@ -178,14 +185,18 @@ a.visited {
 }
 
 .intro-controls {
+  opacity: 0;
   grid-row: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0;
+    animation: fadeIn 0.8s forwards;
+  animation-delay: 0.8s;
 }
 
 #sound-toggle {
+  
   font-family: inherit;
   font-size: 1rem;
   background: none;
@@ -195,6 +206,8 @@ a.visited {
   padding: 0.4em 1.2em;
   cursor: pointer;
   margin-bottom: 0.7em;
+    
+  
 }
 
 .intro-controls p {
@@ -232,8 +245,8 @@ a.visited {
   display: grid;
   grid-template-columns: clamp(24px, 5vw, 80px) repeat(10, 1fr) minmax(0, 1fr) minmax(0, 1fr) clamp(24px, 5vw, 80px);
   grid-template-rows: 1fr;
-  align-items: end;
-  margin: 40px 0 0 0;
+  align-items: center; /* changed from end to center for vertical centering */
+  margin: 0 0 0 0; /* Remove top margin to eliminate extra space */
   color: var(--ghost-white);
   opacity: 1 !important;
   transition: none !important;
@@ -244,9 +257,9 @@ a.visited {
 .overlay-header-main {
   grid-column: 1 / -1;
   justify-self: center;
-  align-self: end;
-  font-size: 16px;
-  font-family: 'Space Mono', Arial, monospace;
+  align-self: center; /* changed from end to center for vertical alignment */
+  /* font-size: 16px; */
+  
   font-weight: 400;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -260,10 +273,10 @@ a.visited {
   transform: translateX(-50%);
 }
 .overlay-header-sub {
-  grid-column: 11 / 15;
+  grid-column: 11 / 14;
   justify-self: start;
-  align-self: end;
-  font-size: 16px;
+  align-self: center; /* changed from end to center for vertical alignment */
+  /* font-size: 16px; */
   font-family: 'Space Mono', Arial, monospace;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -334,9 +347,9 @@ a.visited {
   position: absolute;
   left: 0;
   top: 100%;
-  margin-top: 8px;
+  margin-top: 24px;
   font-size: clamp(0.7rem, 2vw, 14px);
-  color: var(--ghost-white);
+  color: var(--chalk-white);
   text-align: left;
   font-family: 'Space Mono', Arial, sans-serif;
   letter-spacing: 0.04em;
@@ -354,24 +367,26 @@ a.visited {
   grid-template-columns: clamp(24px, 5vw, 80px) repeat(5, 1fr) auto repeat(6, 1fr) clamp(24px, 5vw, 80px);
   align-items: center;
   justify-items: center;
-  font-family: 'Space Mono', Arial, monospace;
-  font-size: 16px;
+  /* font-size: 16px; */
   text-transform: uppercase;
   color: var(--ghost-white);
   pointer-events: auto;
   position: relative;
   gap: 0;
+  margin: 0 0 32px 0; /* Set bottom margin to 32px, top 0 */
 }
 .footer-text {
   grid-column: 2 / 7;
   justify-self: start;
   text-align: left;
+  align-self: center; /* vertically center text in footer row */
 }
 .footer-sound-wrapper {
   grid-column: 7 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
+  align-self: center; /* vertically center button in footer row */
 }
 .footer-sound-toggle {
   background: none;
@@ -404,7 +419,7 @@ a.visited {
 
 /* Outro Overlay */
 #outro-overlay h2{
-   font-size: 80px;
+   font-size: clamp(0.7rem, 2vw, 80px) !important;
   font-weight: 300;
   line-height: 100%;
   color:var(--contaminated-red)
@@ -428,7 +443,7 @@ a.visited {
 
 .overlay-content {
   color: var(--chalk-white, #fff);
-  font-size: 1.3rem;
+  /* font-size: 1.3rem; */
   max-width: 75vw;
   text-align: center;
   margin: 0 auto;
