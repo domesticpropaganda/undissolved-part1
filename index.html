@@ -15,7 +15,10 @@
   <div id="intro-overlay">
     <h1>UNDISSOLVED</h1>
     <h2>Snapshots from a century of plastics</h2>
-    <p>Scroll or swipe to continue</p>
+    <div class="intro-controls">
+      <button id="sound-toggle">Sound: On</button>
+      <p>Scroll or swipe to continue</p>
+    </div>
   </div>
   <canvas id="three-canvas"></canvas>
 <div id="timeline-overlay">
@@ -26,8 +29,16 @@
     <span class="overlay-species"></span>
     <span class="overlay-stat-sublabel"></span>
   </div>
-  <div class="overlay-header"></div>
-  <div class="overlay-footer"></div>
+  <div class="overlay-header">
+    <div class="overlay-header-main">UNDISSOLVED</div>
+    <div class="overlay-header-sub">SNAPSHOTS OF A PLASTIC CENTURY</div>
+  </div>
+  <div class="overlay-footer">
+    <div class="footer-text">&copy;2025 STUDIØE</div>
+    <div class="footer-sound-wrapper">
+      <button id="footer-sound-toggle" class="footer-sound-toggle" aria-label="Toggle sound"></button>
+    </div>
+  </div>
 </div>
   <div style="height: 3000px">a</div>
   <script type="module" src="src/main.js"></script>

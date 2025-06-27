@@ -16,6 +16,9 @@ const MOD_RATE = 0.07; // Hz, how fast the oscillation is (0.07Hz = ~14s per cyc
 let freqModActive = false;
 let freqModPhase = 0;
 
+// Set initial sound state to off
+let soundOn = false;
+
 function startFreqModulation() {
   if (freqModActive) return;
   freqModActive = true;
@@ -73,7 +76,7 @@ window.addEventListener('keydown', tryStartAmbient);
 function easeInOut(t) {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }
-window.setAmbientVolume = function(vol, duration = 1) {
+window.setAmbientVolume = function(vol, duration = 0.7) {
   if (gainNode && filter && audioCtx) {
     window._ambientTransitioning = true;
     const startTime = audioCtx.currentTime;
@@ -98,7 +101,7 @@ window.setAmbientVolume = function(vol, duration = 1) {
     animate();
   }
 };
-window.resetAmbientVolume = function(duration = 0.7) {
+window.resetAmbientVolume = function(duration = 1) {
   if (gainNode && filter && audioCtx) {
     window._ambientTransitioning = true;
     const startTime = audioCtx.currentTime;
@@ -129,7 +132,7 @@ window.playClickSound = function() {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.type = 'sine';
-  osc.frequency.value = 400;
+  osc.frequency.value = 1230;
   gain.gain.value = 0.12;
   osc.connect(gain);
   gain.connect(ctx.destination);
@@ -155,9 +158,7 @@ window.updateTimelineOverlay = function({ year, event, species, contaminationRat
   const footer = document.querySelector('.overlay-footer');
   const stepBars = document.querySelector('.overlay-step-bars');
   if (!header || !yearEl || !stat || !statMain || !statSublabel || !footer || !speciesEl || !stepBars) return;
-  // Header/footer always visible
-  header.textContent = 'UNDISSOLVED';
-  footer.textContent = '\u00a92025 STUDI\u00d8E';
+  // Header/footer always visible (no longer set by JS)
   // Show/hide stat+year block
   if (!show) {
     yearEl.style.opacity = 0;
@@ -240,8 +241,10 @@ window.updateTimelineOverlay = function({ year, event, species, contaminationRat
           }
           let i = 0;
           function typeWriter() {
-            // Play click sound only at start of sublabel animation
-            if (i === 0 && window.playClickSound) window.playClickSound();
+            // Play click sound only at start of sublabel animation, with a short delay
+            if (i === 0 && window.playClickSound) {
+              setTimeout(() => window.playClickSound(), 80); // 80ms delay before sound
+            }
             statSublabel.innerHTML = sublabelHTML + sublabelText.slice(0, i);
             if (i <= sublabelText.length) {
               i++;
@@ -271,3 +274,45 @@ const scene = new Scene();
 
 // No need to call animate here; Scene handles it after assets load
 // scene.animate();
+
+// --- Sound toggle logic ---
+(function() {
+  // Main overlay sound toggle (intro)
+  const btn = document.getElementById('sound-toggle');
+  if (btn) {
+    btn.textContent = 'Sound: Off';
+    if (window.gainNode) {
+      window.gainNode.gain.value = 0;
+    }
+    btn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      btn.textContent = soundOn ? 'Sound: On' : 'Sound: Off';
+      if (window.gainNode) {
+        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
+      }
+    });
+    Object.defineProperty(window, 'gainNode', {
+      get() { return gainNode; },
+      configurable: true
+    });
+    Object.defineProperty(window, 'DEFAULT_AMBIENT_VOLUME', {
+      get() { return DEFAULT_AMBIENT_VOLUME; },
+      configurable: true
+    });
+  }
+  // Footer sound toggle
+  const footerBtn = document.getElementById('footer-sound-toggle');
+  if (footerBtn) {
+    // Set initial state
+    footerBtn.classList.toggle('sound-off', !soundOn);
+    footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
+    footerBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      if (window.gainNode) {
+        window.gainNode.gain.value = soundOn ? window.DEFAULT_AMBIENT_VOLUME || 0.08 : 0;
+      }
+      footerBtn.classList.toggle('sound-off', !soundOn);
+      footerBtn.title = soundOn ? 'Mute sound' : 'Unmute sound';
+    });
+  }
+})();
