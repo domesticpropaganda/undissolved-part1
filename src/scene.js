@@ -245,6 +245,36 @@ this._gotoTimelineState = (dir) => {
         e.preventDefault();
       }
     });
+
+    // --- Touch navigation (swipe up/down for mobile) ---
+    let touchStartY = null;
+    let touchMoved = false;
+    window.addEventListener('touchstart', (e) => {
+      if (this._swipeLocked) return;
+      if (e.touches.length === 1) {
+        touchStartY = e.touches[0].clientY;
+        touchMoved = false;
+      }
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      if (this._swipeLocked) return;
+      if (touchStartY !== null && e.touches.length === 1) {
+        const deltaY = e.touches[0].clientY - touchStartY;
+        if (Math.abs(deltaY) > this._swipeThreshold) {
+          if (deltaY < 0) {
+            this._gotoTimelineState(1); // Swipe up
+          } else {
+            this._gotoTimelineState(-1); // Swipe down
+          }
+          touchStartY = null;
+          touchMoved = true;
+        }
+      }
+    }, { passive: false });
+    window.addEventListener('touchend', (e) => {
+      touchStartY = null;
+      touchMoved = false;
+    }, { passive: true });
   }
 
   // --- Call this after assets are loaded to show a random cloud ---
@@ -427,7 +457,7 @@ this._gotoTimelineState = (dir) => {
       const v = Math.random();
       const theta = 2 * Math.PI * u;
       const phi = Math.acos(2 * v - 1);
-      const r = 2 + Math.random() * 2;
+      const r = 4 + Math.random() * 2;
       end.push(
         r * Math.sin(phi) * Math.cos(theta),
         r * Math.sin(phi) * Math.sin(theta),
