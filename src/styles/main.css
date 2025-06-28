@@ -26,6 +26,24 @@ html, body {
   font-size: clamp(12px, 1.2vw, 16px);
 }
 
+/* --- Mobile viewport fix: use dynamic viewport units for overlays and canvas --- */
+#three-canvas,
+#intro-overlay,
+#outro-overlay,
+#timeline-overlay {
+  width: 100vw;
+  height: 100vh;
+}
+@supports (height: 100dvh) {
+  #three-canvas,
+  #intro-overlay,
+  #outro-overlay,
+  #timeline-overlay {
+    height: 100dvh;
+    width: 100dvw;
+  }
+}
+
 .overlay-year, .overlay-stat-main, h1 {
   font-size: clamp(3.5rem, 10vw, 10rem);
   font-weight: 300;
@@ -66,6 +84,12 @@ a.visited {
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+@supports (height: 100dvh) {
+  #three-canvas {
+    height: 100dvh;
+    width: 100dvw;
+  }
 }
 
 /* Responsive adjustments */
@@ -438,6 +462,13 @@ a.visited {
   cursor: pointer;
   letter-spacing: 0.04em;
   transition: background 0.2s;
+}
+
+#sound-toggle,
+.footer-sound-toggle,
+button,
+#outro-close-btn {
+  touch-action: manipulation;
 }
 
 

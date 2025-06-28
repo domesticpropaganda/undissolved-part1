@@ -18,7 +18,7 @@ export class Scene {
     this.preloader.style.zIndex = '9999';
     this.preloaderText = document.createElement('span');
     this.preloaderText.style.color = 'white';
-    this.preloaderText.style.fontSize = '2rem';
+    this.preloaderText.style.fontSize = 'min(2rem, 6vw)'; // Responsive font size
     this.preloaderText.textContent = 'Loading...';
     this.preloader.appendChild(this.preloaderText);
     document.body.appendChild(this.preloader);
@@ -26,14 +26,16 @@ export class Scene {
     // --- Three.js setup ---
     this.renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-canvas'), antialias: true });
     this.renderer.setClearColor(0x000000);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Mobile-friendly pixel ratio
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.camera.position.z = 5;
     window.addEventListener('resize', () => this.onResize());
+    window.addEventListener('orientationchange', () => this.onResize()); // Handle orientation
 
     // --- State ---
-    this.pointCount = 3000;
+    this.pointCount = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? 1300 : 3000; // Lower for mobile
     this.assetsLoaded = false;
     this.timeline = [];
     this.glbCache = {};
@@ -145,6 +147,7 @@ export class Scene {
   onResize() {
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.camera.updateProjectionMatrix();
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Ensure pixel ratio is updated
     this.renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
@@ -269,6 +272,10 @@ this._gotoTimelineState = (dir) => {
           touchStartY = null;
           touchMoved = true;
         }
+      }
+      // Prevent scrolling if interacting with the canvas
+      if (e.target && e.target.tagName === 'CANVAS') {
+        e.preventDefault();
       }
     }, { passive: false });
     window.addEventListener('touchend', (e) => {

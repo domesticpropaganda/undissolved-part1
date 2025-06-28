@@ -6,6 +6,22 @@ window.scrollTo(0, 0);
 import { Scene } from './scene.js';
 import './styles/main.css';
 
+// --- Scene initialization after DOMContentLoaded for mobile safety ---
+let scene = null;
+window.addEventListener('DOMContentLoaded', () => {
+  scene = new Scene();
+  // Hide address bar on mobile after load
+  setTimeout(() => {
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.scrollTo(0, 1);
+    }
+  }, 100);
+});
+// Ensure orientationchange triggers resize for scene/canvas
+window.addEventListener('orientationchange', () => {
+  if (scene && typeof scene.onResize === 'function') scene.onResize();
+});
+
 // --- Ambient sound and click sound system (moved from index.html) ---
 let audioCtx, noiseSource, filter, gainNode;
 let started = false;
@@ -356,12 +372,3 @@ window.updateTimelineOverlay = function({ year, event, species, contaminationRat
     }, 400);
   }, 200);
 };
-const scene = new Scene();
-
-// No need to call handleScroll; scroll is handled internally by Scene
-// window.addEventListener('scroll', () => {
-//   scene.handleScroll(window.scrollY);
-// });
-
-// No need to call animate here; Scene handles it after assets load
-// scene.animate();
