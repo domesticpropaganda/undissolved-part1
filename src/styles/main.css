@@ -27,11 +27,11 @@ html, body {
 }
 
 .overlay-year, .overlay-stat-main, h1 {
-  font-size: clamp(6rem, 10vw, 10rem);
+  font-size: clamp(3.5rem, 10vw, 10rem);
   font-weight: 300;
 }
 
-h2, #intro-overlay h2, #outro-overlay h2 {
+h2 {
   font-size: clamp(1.2rem, 3vw, 3.5rem);
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -131,7 +131,7 @@ a.visited {
   }
 }
 
-#intro-overlay h2, #outro-overlay h2 {
+#intro-overlay h2, #outro-overlay .overlay-content h2 {
   font-size: clamp(0.7rem, 2vw, 16px) !important;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -328,7 +328,7 @@ a.visited {
   left: 0;
   top: 100%;
   margin-top: 24px;
-  font-size: clamp(0.9rem, 2vw, 0.9rem);
+  font-size: clamp(0.6rem, 2vw, 0.8rem);
   color: var(--chalk-white);
   text-align: left;
   font-family: 'Space Mono', Arial, sans-serif;
