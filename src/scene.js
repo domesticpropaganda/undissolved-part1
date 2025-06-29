@@ -491,7 +491,8 @@ this._gotoTimelineState = (dir) => {
     for (let i = 0; i < positions.count; i++) {
       start.push(positions.getX(i), positions.getY(i), positions.getZ(i));
       const idx3 = (i * 3) % meshPositions.length;
-      const scale = 3.0;
+      const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const scale = isMobile ? 2.5 : 3.0;
       end.push(meshPositions[idx3] * scale, meshPositions[idx3 + 1] * scale, meshPositions[idx3 + 2] * scale);
     }
     await this._startMorphAsync(start, end, duration, easing);
