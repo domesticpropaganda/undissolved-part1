@@ -75,7 +75,7 @@ export class Scene {
     const resp = await fetch(import.meta.env.BASE_URL + 'assets/data/plastikwelt_timeline.json');
     const timeline = await resp.json();
     this.timeline = timeline;
-    console.log('[DEBUG] Timeline loaded:', timeline);
+    // console.log('[DEBUG] Timeline loaded:', timeline);
     this.buildTimelineStates(); // <-- Ensure timelineStates is built after loading timeline
     // Collect unique mesh names
     const meshSet = new Set();
@@ -89,7 +89,7 @@ export class Scene {
       loadedCount++;
       const percent = Math.round((loadedCount / total) * 100);
       this.preloaderText.textContent = `Loading ${name} (${percent}%)`;
-      console.log(`[Preloader] Loaded: ${name} (${loadedCount}/${total})`);
+      // console.log(`[Preloader] Loaded: ${name} (${loadedCount}/${total})`);
     };
     const promises = meshList.map(meshName => {
       return new Promise(resolve => {
@@ -98,14 +98,14 @@ export class Scene {
           updatePreloader(meshName);
           resolve();
         }, undefined, err => {
-          console.error('Failed to load', meshName, err);
+          // console.error('Failed to load', meshName, err);
           updatePreloader(meshName);
           resolve();
         });
       });
     });
     await Promise.all(promises);
-    console.log('[Preloader] All assets loaded.');
+    // console.log('[Preloader] All assets loaded.');
   }
 
   createRandomCloud(count = this.pointCount) {
@@ -287,7 +287,7 @@ this._gotoTimelineState = (dir) => {
   // --- Call this after assets are loaded to show a random cloud ---
   showInitialCloud() {
     this.createRandomCloud();
-    console.log('[Scene] Initial random cloud generated and displayed.');
+    // console.log('[Scene] Initial random cloud generated and displayed.');
     // Start at cloud state, do NOT morph to mesh or show overlay/stat until user interacts
     this._activeMorphIdx = 0;
     this._lastTimelineStateIdx = 0;
@@ -362,7 +362,7 @@ this._gotoTimelineState = (dir) => {
     this._cancelContaminationHighlight?.();
     const state = this.timelineStates[idx];
     this._swipeLocked = true;
-    console.log('[DEBUG] morphToTimelineState', idx, state);
+    // console.log('[DEBUG] morphToTimelineState', idx, state);
 
     // --- Mesh→cloud→mesh (forward) or mesh←cloud←mesh (backward) ---
     if (state.type === 'cloud' && prevState && prevState.type === 'mesh') {
